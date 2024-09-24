@@ -11,6 +11,7 @@
     <modules>
         <module>twitter-domain</module>
         <module>twitter-application</module>
+        <module>twitter-infrastructure</module>
     </modules>
 
     <properties>
