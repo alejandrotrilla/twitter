@@ -1,4 +1,4 @@
-package ar.com.uala.twitter.rest;
+package ar.com.uala.twitter.monitor;
 
 import org.eclipse.microprofile.health.HealthCheck;
 import org.eclipse.microprofile.health.HealthCheckResponse;
