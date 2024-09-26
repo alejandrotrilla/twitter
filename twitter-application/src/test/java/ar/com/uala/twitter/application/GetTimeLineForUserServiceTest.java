@@ -2,7 +2,6 @@ package ar.com.uala.twitter.application;
 
 import ar.com.uala.twitter.domain.exception.TimeLineRepositoryException;
 import ar.com.uala.twitter.domain.model.Page;
-import ar.com.uala.twitter.domain.model.PageRequest;
 import ar.com.uala.twitter.domain.model.Tweet;
 import ar.com.uala.twitter.domain.port.secondary.TimeLineRepository;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -14,8 +13,8 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.when;
 
@@ -36,10 +35,6 @@ class GetTimeLineForUserServiceTest {
     ) {
         final TimeLineRepository timeLineRepository = Mockito.mock(TimeLineRepository.class);
         final GetTimeLineForUserService target = new GetTimeLineForUserService(timeLineRepository);
-        final PageRequest pageRequest = new PageRequest(
-                pageSize,
-                pageIndex
-        );
         final Page<Tweet> page = new Page<>(
                 List.of(),
                 0
@@ -47,12 +42,14 @@ class GetTimeLineForUserServiceTest {
 
         when(timeLineRepository.findAllByPage(
                 anyString(),
-                eq(pageRequest)
+                anyInt(),
+                anyInt()
         )).thenReturn(page);
 
         final Page<Tweet> result = target.handle(
                 userId,
-                pageRequest
+                pageSize,
+                pageIndex
         );
 
         assertNotNull(result);
@@ -78,23 +75,21 @@ class GetTimeLineForUserServiceTest {
     ) {
         final TimeLineRepository timeLineRepository = Mockito.mock(TimeLineRepository.class);
         final GetTimeLineForUserService target = new GetTimeLineForUserService(timeLineRepository);
-        final PageRequest pageRequest = new PageRequest(
-                pageSize,
-                pageIndex
-        );
 
         doThrow(new RuntimeException())
                 .when(timeLineRepository)
                 .findAllByPage(
                         anyString(),
-                        eq(pageRequest)
+                        anyInt(),
+                        anyInt()
                 );
 
         assertThrows(
                 TimeLineRepositoryException.class,
                 () -> target.handle(
                         userId,
-                        pageRequest
+                        pageSize,
+                        pageIndex
                 )
         );
     }

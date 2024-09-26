@@ -1,7 +1,6 @@
 package ar.com.uala.twitter.adapter;
 
 import ar.com.uala.twitter.domain.model.Page;
-import ar.com.uala.twitter.domain.model.PageRequest;
 import ar.com.uala.twitter.domain.model.Tweet;
 import ar.com.uala.twitter.domain.port.secondary.TimeLineRepository;
 import ar.com.uala.twitter.domain.port.secondary.TimeLineSyncRepository;
@@ -22,15 +21,16 @@ public class SynchronizableTimeLineRepositoryInMemoryImpl
     @Override
     public Page<Tweet> findAllByPage(
             final String userId,
-            final PageRequest pageRequest
+            final int pageSize,
+            final int pageIndex
     ) {
         final List<Tweet> items = repository.getOrDefault(
                 userId,
                 List.of()
         );
         final List<Tweet> itemsInPage = items.stream()
-                                             .skip(pageRequest.pageSize() * pageRequest.pageIndex())
-                                             .limit(pageRequest.pageSize())
+                                             .skip(pageSize * pageIndex)
+                                             .limit(pageSize)
                                              .toList();
         return new Page<>(
                 itemsInPage,

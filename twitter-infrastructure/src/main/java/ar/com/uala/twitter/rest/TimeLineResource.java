@@ -1,7 +1,6 @@
 package ar.com.uala.twitter.rest;
 
 import ar.com.uala.twitter.domain.model.Page;
-import ar.com.uala.twitter.domain.model.PageRequest;
 import ar.com.uala.twitter.domain.model.Tweet;
 import ar.com.uala.twitter.domain.port.secondary.TimeLineRepository;
 import ar.com.uala.twitter.rest.dto.TweetDTO;
@@ -41,10 +40,8 @@ public class TimeLineResource {
     ) {
         final Page<Tweet> page = timeLineRepository.findAllByPage(
                 userId,
-                new PageRequest(
-                        pageSize,
-                        pageIndex
-                )
+                pageSize,
+                pageIndex
         );
         final List<TweetDTO> dtos = page.items()
                                         .stream()
