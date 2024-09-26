@@ -6,6 +6,10 @@ import java.util.UUID;
 import static java.util.Objects.requireNonNull;
 
 public class Tweet {
+    private static final int TEXT_MAX_LONG = 280;
+    private static final String TEXT_TOO_LONG_ERROR_MESSAGE =
+            "Tweet::Text must not exceed %s characters long.".formatted(TEXT_MAX_LONG);
+
     private final UUID id;
     private final LocalDateTime createdOn;
     private String userId;
@@ -23,6 +27,9 @@ public class Tweet {
                 text,
                 "Tweet::Text must not be null."
         );
+        if (this.text.length() > TEXT_MAX_LONG) {
+            throw new IllegalArgumentException(TEXT_TOO_LONG_ERROR_MESSAGE);
+        }
         this.id = UUID.randomUUID();
         this.createdOn = LocalDateTime.now();
     }
